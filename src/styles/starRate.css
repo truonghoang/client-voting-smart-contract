@@ -1,0 +1,69 @@
+/*
+  Based on TailwindCSS recommendations,
+  consider using classes instead of the `@apply` directive
+  @see https://tailwindcss.com/docs/reusing-styles#avoiding-premature-abstraction
+*/
+:root {
+    --tb: #ffffff40;
+    --tbh: #ffffff70;
+    --tran: all 0.5s ease 0.1s;
+  }
+
+ 
+  .rating-stars {
+    @apply block w-[65vmin] relative flex justify-center p-[3vmin] rounded-[5vmin];
+    transform: rotateX(15deg);
+  }
+  input {
+    @apply hidden;
+  }
+  label {
+    @apply w-[8vmin] h-[8vmin] cursor-pointer transition-[var(--tran)] delay-[0s] relative mx-[1.5vmin] my-[0.5vmin] before:absolute before:w-full before:h-full before:content-["\2605"] before:z-[2] before:text-[11vmin] before:leading-[11vmin] before:text-[#b1ddff] before:text-center before:translate-y-[0vmin] before:transition-[var(--tran)] hover:before:text-[#e2f2ff];
+  }
+  label:before {
+    text-shadow: 1px 1px 1px var(--tb), -1px -1px 1px var(--tb),
+      -1px 0px 1px var(--tb), 1px 0px 1px var(--tb), 0vmin 0.1vmin 1px #1d8be1,
+      0vmin 0.1vmin 1px #1d8be1, 0vmin 0.2vmin 1px #1b81d1,
+      0vmin 0.2vmin 1px #1b81d1, 0vmin 0.3vmin 1px #1972b7,
+      0vmin 0.3vmin 1px #1972b7, 0vmin 0.4vmin 1px #1a76bd,
+      0vmin 0.4vmin 1px #1a76bd, 0vmin 0.5vmin 1px #196fb1,
+      0vmin 0.5vmin 1px #196fb1, 0vmin 0.6vmin 1px #1868a5,
+      0vmin 0.6vmin 1px #1868a5, 0vmin 0.7vmin 1px #155f97,
+      0vmin 0.7vmin 1px #155f97, 0vmin 0.8vmin 1px #125689,
+      0vmin 0.8vmin 1px #125689, 0vmin 0.9vmin 1px #104e7d,
+      0vmin 0.9vmin 1px #104e7d, 0vmin 1vmin 1px #104975,
+      0vmin 1.1vmin 1px #104975, 0vmin 1.1vmin 1px #0e4169,
+      0vmin 1.2vmin 1px #0e4169, 0vmin 1.2vmin 1px #0c395d,
+      0vmin 1.3vmin 1px #0c395d, 0vmin 1.3vmin 1px #0a3151,
+      0vmin 1.4vmin 1px #0a3151, 0vmin 1.4vmin 1px #092c49,
+      0vmin 1.5vmin 1px #092c49, 0vmin 1.5vmin 1px #072239,
+      0vmin 1.6vmin 1px #072239, 0vmin 1.6vmin 3px #00000020;
+    filter: drop-shadow(0px 5px 10px #008dff) drop-shadow(0px 5px 30px #008dff);
+  }
+  label:hover:before {
+    filter: drop-shadow(0px 5px 15px #b1ddff) drop-shadow(0px 5px 30px #b1ddff);
+  }
+  
+  /*** unchecked:before ***/
+  input:checked + label ~ label:before,
+  input:checked + label ~ label:hover:active:before {
+    @apply transition-[var(--tran)] text-[#ffedb9] text-[#18242f] translate-y-[1.5vmin];
+    filter: none;
+    text-shadow: 1px 1px 1px var(--tbh), -1px -1px 1px var(--tbh),
+      -1px 0px 1px var(--tbh), 1px 0px 1px var(--tbh), 0vmin 0.01vmin 1px #1d8be1,
+  }
+  
+  /*** unchecked:hover:before ***/
+  input:checked + label ~ label:hover:before,
+  label ~ label:hover:active:before {
+    @apply text-[#2196F3] translate-y-[1vmin];
+    text-shadow: 1px 1px 1px var(--tbh), -1px -1px 1px var(--tbh),
+      -1px 0px 1px var(--tbh), 1px 0px 1px var(--tbh), 0vmin 0.02vmin 1px #1d8be1,
+      0vmin 0.04vmin 1px #1d8be1, 0vmin 0.06vmin 1px #1b81d1,
+     
+  }
+
+  
+ 
+ 
+ 

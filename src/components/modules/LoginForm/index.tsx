@@ -12,6 +12,7 @@ declare global {
     web3?: any;
   }
 }
+
 function LoginForm() {
   const router = useRouter();
   React.useEffect(() => {

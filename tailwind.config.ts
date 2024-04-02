@@ -5,6 +5,7 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    'node_modules/preline/dist/*.js',
   ],
   theme: {
     screens: {
@@ -15,6 +16,15 @@ const config: Config = {
       desktop: '1280px',
       'desktop-xl': '1650px'
     },
+    container: {
+      padding: {
+        DEFAULT: '2rem', // 1rem = 16px
+        sm: '3rem',
+        lg: '4rem',
+        xl: '5rem',
+        '2xl': '6rem',
+      }
+      },
     extend: {
       backgroundImage: {
         "voter": "url('/images/user_vote.png')",
@@ -65,6 +75,8 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('preline/plugin'),
+  ],
 };
 export default config;
