@@ -1,5 +1,4 @@
 import LoginForm from "@/components/modules/LoginForm";
-
 import './style.css'
 function Login() {
   return (

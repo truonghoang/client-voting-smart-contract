@@ -4,6 +4,8 @@ import Table from "@/components/atoms/Table";
 import "@/styles/table.css";
 import Modal from "@/components/atoms/Modal";
 import StarRate from "@/components/atoms/StarRate";
+import { Contract,ethers } from "ethers";
+import abi from "@/smc/abi.json";
 function TableModule() {
   const [show, setShow] = React.useState(true);
   const [rate, setRate] = React.useState(0);
@@ -40,11 +42,30 @@ function TableModule() {
       },
     },
   ];
-  console.log(rate);
+   let signer:any;
+   React.useEffect(()=>{
+    async function checkSigner (){
+      let provider = new ethers.BrowserProvider(window.ethereum)
+      let signer = await provider.getSigner();
+      return signer
+    }
+    signer = checkSigner()
+     initContract();
+   },[])
+  async function initContract() {
+    const contract =  new Contract(
+      "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+      abi.abi,
+      signer
+    );
+    let result = contract.getProducts()
+    console.log(result)
+  }
   const rows = [
     { id: 1, productName: "abc" },
     { id: 2, productName: "abc" },
   ];
+  
   return (
     <div className="w-ful h-full  relative justify-center items-center ">
       <Modal

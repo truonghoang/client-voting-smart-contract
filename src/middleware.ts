@@ -9,7 +9,7 @@ export default function middleware(req: NextRequest) {
   let cookie = req.cookies.get('ethereum_add');
   let res = NextResponse.next()
   isAuthenticated = cookie ?true :false
-  console.log("hêllo")
+  console.log("middleware check")
  if(req.nextUrl.pathname.includes('login') ) {
   const cookies = req.headers.get("cookie");
   if (cookies) {
