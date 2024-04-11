@@ -66,7 +66,7 @@ export default function Table({
                             {column.format && typeof value === "number"
                               ? column.format(value)
                               : column.render
-                              ? column.render(value)
+                              ? column.render(row)
                               : value}
                           </td>
                         );

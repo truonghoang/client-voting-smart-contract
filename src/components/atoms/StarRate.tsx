@@ -12,9 +12,9 @@ function StarRate({voteRate}:{voteRate:(arg:number)=>void}) {
     <div className="rating-stars">
         {
             [...Array(5)].map((star,index)=>{
-                return(<>
+                return(<div key={index}>
                 <input key={index} type="radio" onChange={vote} name="rating" id={`rs${index}`}/><label htmlFor={`rs${index}`}></label>
-                </>
+                </div>
                 )
             })
         }

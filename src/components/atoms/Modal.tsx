@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect, ReactNode } from "react";
 import "@/styles/modal.css";
 
 // { children, isOpen, onClose }:{children:ReactNode,isOpen:boolean,onClose:()=>void}
-const Modal = ({ children, show, onShow }:{children?:ReactNode,show:boolean,onShow:(arg:boolean)=>void}) => {
+const Modal = ({ children, show, onShow ,onSave}:{children?:ReactNode,show:boolean,onShow:(arg:boolean)=>void,onSave:()=>void}) => {
   const modalRef = useRef(null);
  
   useEffect(() => {
@@ -18,6 +18,7 @@ const Modal = ({ children, show, onShow }:{children?:ReactNode,show:boolean,onSh
 
   const handleCloseModal = () => {
     onShow(false);
+    
   };
 
   return (
@@ -33,7 +34,11 @@ const Modal = ({ children, show, onShow }:{children?:ReactNode,show:boolean,onSh
             <button onClick={handleCloseModal} className="btn close-btn">
               Close
             </button>
-            <button onClick={handleCloseModal} className="btn save-btn">
+            <button onClick={()=>{
+              onSave();
+              handleCloseModal();
+
+            }} className="btn save-btn">
               Save
             </button>
                 

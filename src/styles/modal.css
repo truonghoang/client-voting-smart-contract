@@ -2,7 +2,7 @@
     @apply  fixed flex justify-center items-center  bg-[rgba(0,0,0,0.5)] z-[100] inset-0; /* Ensure modal content is above other elements */
   }
   .modal-content {
-    @apply bg-white relative min-w-80 min-h-72 p-5 rounded-[5px];
+    @apply bg-white relative min-w-[45rem] min-h-[400px] p-5 rounded-[5px]  ; 
   }
   .btn {
     @apply  cursor-pointer px-2.5 py-[5px] rounded-[5px] border-[none] mb-2 text-[#fff];

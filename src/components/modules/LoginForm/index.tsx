@@ -1,41 +1,31 @@
 "use client";
 import React from "react";
 import Button from "@/components/atoms/Button";
-import {ethers,Contract} from 'ethers';
 import Cookie from "js-cookie";
 import { useRouter } from "next/navigation";
 import SweetAlert from "sweetalert2";
 
-
+import api from "@/api";
 
 function LoginForm() {
   const router = useRouter();
-  
-  let signer ;
-  let provider:any;
-  React.useEffect(() => {
-    // console.error("MetaMask is not installed!",window.ethereum);
-  if(!window.ethereum) return;
-   provider = new ethers.BrowserProvider(window.ethereum)
-  }, []);
 
   const connectToMetaMask = async () => {
     try {
-      signer = await provider.getSigner()
-       if(signer) {
-        let address = await signer.getAddress()
-        Cookie.set("ethereum_add", address, { expires: 3600 });
+      let address = await api.getAddress();
+      if (address) {
+        Cookie.set("ethereum_add",address, { expires: 3600 });
         SweetAlert.fire({
           title: "Login successfully",
           icon: "success",
         });
         router.push("/");
-       }
-    } catch (error) {
+      }
+    } catch (error: any) {
       SweetAlert.fire({
-            title: "User denied account access or MetaMask is not installed",
-            icon: "error",
-          });
+        title: error.message,
+        icon: "error",
+      });
     }
   };
   const style = {

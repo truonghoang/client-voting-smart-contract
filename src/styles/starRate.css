@@ -11,8 +11,8 @@
 
  
   .rating-stars {
-    @apply block w-[65vmin] relative flex justify-center p-[3vmin] rounded-[5vmin];
-    transform: rotateX(15deg);
+    @apply block w-[400px]  flex justify-between  rounded-[5vmin];
+    transform:  translate(-45px, -10px) rotateX(15deg);
   }
   input {
     @apply hidden;
