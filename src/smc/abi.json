@@ -67,6 +67,52 @@
           "internalType": "uint256",
           "name": "productId",
           "type": "uint256"
+        }
+      ],
+      "name": "detailProductVote",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "productId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "reviewer",
+              "type": "address"
+            },
+            {
+              "internalType": "uint8",
+              "name": "rating",
+              "type": "uint8"
+            },
+            {
+              "internalType": "string",
+              "name": "reviewText",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "timestamp",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct Voting.ProductFeedBack",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "productId",
+          "type": "uint256"
         },
         {
           "internalType": "string",

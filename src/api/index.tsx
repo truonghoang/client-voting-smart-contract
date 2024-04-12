@@ -95,8 +95,8 @@ const getProductsOwner =async() =>{
     let result = products.map((product:any) =>{
       return{
         id: ethers.BigNumber.from(product["productId"]._hex).toNumber(),
-        name: product["name"],
-        image:product["imageLink"]
+        rate: product["rate"]
+        
        }
      }    
       ).filter((value:any)=> value.id !==0)
@@ -139,7 +139,17 @@ const getRateProduct = async ()=>{
   const { contract } = await initContract();
   try {
     const products = await contract.getRatingProduct();
-    console.log("Products on page", products);
+   return products
+  } catch (error) {
+    console.log("Products on page", error);
+  }
+}
+
+const getDetailFeedBack = async (productId:number)=>{
+  const { contract } = await initContract();
+  try {
+    const product = await contract.detailProductVote(productId);
+   return product
   } catch (error) {
     console.log("Products on page", error);
   }
@@ -150,5 +160,5 @@ export default {
   getAddress,
   addProducts,
   getProducts,
-  getProductsOwner,feedback,getRateProduct
+  getProductsOwner,feedback,getRateProduct,getDetailFeedBack
 };

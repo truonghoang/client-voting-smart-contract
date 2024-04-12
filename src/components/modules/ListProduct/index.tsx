@@ -9,12 +9,22 @@ import {
   Th,
   Td,
   TableCaption,
-  TableContainer,Button
+  TableContainer,Button,  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
 } from "@chakra-ui/react";
+
 import api from "@/api";
 function ListProduct() {
   const titleTable = ["Id", "Rate", "Action"];
   const [rows, setRow] = React.useState([]);
+  const [open,setOpen] = React.useState(false)
+  const [detail,setDetail] = React.useState({productId: 0});
+  const [fetch,setFetch] = React.useState(false)
   React.useEffect(() => {
     api.getProductsOwner().then((owner) => {
       setRow(owner);
@@ -40,11 +50,14 @@ function ListProduct() {
       minWidth: 100,
       align: "center",
       format: (value: number) => value.toFixed(2),
-      render: () => {
+      render: (record:any) => {
         return (
           <Button
             type="button"
-            onClick={() => {}}
+            onClick={() => {
+              setDetail({productId:record.id});
+              setFetch(true)
+             }}
             className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
           >
             Detail
@@ -53,6 +66,25 @@ function ListProduct() {
       },
     },
   ];
+  React.useEffect(()=>{
+    if(fetch==true){
+      api.getDetailFeedBack(detail.productId).then((data:any)=>{
+            setFetch(false)
+            console.log(data)
+            let result = data.map((item:any)=>{
+              return{
+                id: item["id"],
+                reviewText: item["reviewText"],
+                reviewer: item["reviewer"],
+                timestamp:item["timestamp"],
+                rate: item["rating"]
+              }
+            })
+            console.log(result)
+            setOpen(true)
+      })
+    }
+  },[fetch])
   return (
     <div>
       <TableContainer>
@@ -96,6 +128,26 @@ function ListProduct() {
           </Tbody>
         </Table>
       </TableContainer>
+  {/* Modal */}
+      <Modal isOpen={open} onClose={()=>{ setOpen(false)}}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Detail FeedBack</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+           <p>{detail.productId}</p>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme='blue' mr={3} onClick={()=>{
+              setOpen(false);
+            }}>
+              Close
+            </Button>
+           
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   );
 }
