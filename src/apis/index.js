@@ -1,6 +1,6 @@
-import { Contract, ethers,utils } from "ethers";
+import { Contract, ethers } from "ethers";
 import abi from "@/smc/abi.json";
-import {formatDateTime} from "@/utils/formatTime"
+import { formatDateTime } from "@/utilizings/formatTime";
 const initProvider = () => {
   if (!window.ethereum)
     throw new Error(
@@ -12,20 +12,26 @@ const initProvider = () => {
 
 const getAddress = async () => {
   try {
-    let address: string = "";
+    let address;
     let provider = initProvider();
-    address = await provider.send("eth_requestAccounts", []);
+    address = await provider.send("wallet_requestPermissions", [
+      { eth_accounts: {} },
+    ]);
 
-    return address[0];
-  } catch (error: any) {
-    throw new Error("User denied account access or you can login Wallet");
-    // throw new Error(error.message);
+    return address[0].caveats[0]["value"];
+  } catch (error) {
+    console.log(error);
+    if (error.code === 4001) {
+      throw new Error(error.message);
+    } else {
+      throw new Error("User denied account access or you can login Wallet");
+    }
+   
   }
 };
 
 //  contract
-const initContract = async () => {
-  
+const initContract =  () => {
   let provider = initProvider();
 
   const contract = new Contract(
@@ -34,7 +40,6 @@ const initContract = async () => {
     provider
   );
   return { contract, provider };
- 
 };
 
 /* lưu ý: khi triển khai hàm thì bên thực thi hàm sẽ phải chịu phí gas */
@@ -45,7 +50,7 @@ const addProducts = async (name = "", imageLink = "") => {
   }
 
   try {
-    const { contract, provider } = await initContract();
+    const { contract, provider } =  initContract();
 
     let accounts = await provider.send("eth_requestAccounts", []);
 
@@ -66,51 +71,51 @@ const addProducts = async (name = "", imageLink = "") => {
   }
 };
 
-const getProducts = async (page: number, limit: number) => {
-  const { contract } = await initContract();
+const getProducts = async (page, limit) => {
+  const { contract } =  initContract();
   try {
-    
-    const products = await contract.getPaginationProduct(limit,page);
-    let result = products.map((product:any) =>{
-      return{
-        id: ethers.BigNumber.from(product["productId"]._hex).toNumber(),
-        name: product["name"],
-        image:product["imageLink"]
-       }
-     }    
-      ).filter((value:any)=> value.id !==0)
+    const products = await contract.getPaginationProduct(limit, page);
+    let result = products
+      .map((product) => {
+        return {
+          id: ethers.BigNumber.from(product["productId"]._hex).toNumber(),
+          name: product["name"],
+          image: product["imageLink"],
+        };
+      })
+      .filter((value) => value.id !== 0);
 
-      console.log("Products:1", result);
-      return result;
-   
-  } catch (error: any) {
+    console.log("Products:1", result);
+    return result;
+  } catch (error) {
     console.log("Products on page", error);
   }
 };
 
-const getProductsOwner =async() =>{
-  const { contract } = await initContract();
-  try{
+const getProductsOwner = async () => {
+  const { contract } =  initContract();
+  try {
     const products = await contract.getProductOwners();
-    let result = products.map((product:any) =>{
-      return{
-        id: ethers.BigNumber.from(product["productId"]._hex).toNumber(),
-        rate: product["rate"]
-        
-       }
-     }    
-      ).filter((value:any)=> value.id !==0)
+    let result = products
+      .map((product) => {
+        return {
+          id: ethers.BigNumber.from(product["productId"]._hex).toNumber(),
+          rate: product["rate"],
+        };
+      })
+      .filter((value) => value.id !== 0);
 
-      console.log("Products:1", result);
-      return result;
+    console.log("Products:1", result);
+    return result;
   } catch (error) {
     console.log("Products on page", error);
   }
-}
+};
 
-const feedback = async (props:{productId:number,reviewText:string,rating:number}) => {
+
+const feedback = async (props) => {
   try {
-    const { contract, provider } = await initContract();
+    const { contract, provider } =  initContract();
 
     let accounts = await provider.send("eth_requestAccounts", []);
 
@@ -118,13 +123,18 @@ const feedback = async (props:{productId:number,reviewText:string,rating:number}
 
     // Kết nối đối tượng Contract với đối tượng Signer
     const contractWithSigner = contract.connect(signer);
-     //
-     let productId = ethers.BigNumber.from(props.productId)
-     
-     let time = formatDateTime(new Date().getTime())
-    
+    //
+    let productId = ethers.BigNumber.from(props.productId);
+
+    let time = formatDateTime(new Date().getTime());
+
     // Gọi hàm addProduct
-    const transaction = await contractWithSigner.feedbackProduct(productId,props.reviewText,props.rating,time);
+    const transaction = await contractWithSigner.feedbackProduct(
+      productId,
+      props.reviewText,
+      props.rating,
+      time
+    );
     console.log("Transaction hash:", transaction.hash);
 
     // Chờ cho giao dịch được xác nhận
@@ -135,30 +145,46 @@ const feedback = async (props:{productId:number,reviewText:string,rating:number}
   }
 };
 
-const getRateProduct = async ()=>{
-  const { contract } = await initContract();
+const getRateProduct = async () => {
+  const { contract } =  initContract();
   try {
     const products = await contract.getRatingProduct();
-   return products
+    return products;
   } catch (error) {
     console.log("Products on page", error);
   }
-}
+};
 
-const getDetailFeedBack = async (productId:number)=>{
-  const { contract } = await initContract();
+const getDetailFeedBack = async (productId) => {
+  const { contract } =  initContract();
   try {
     const product = await contract.detailProductVote(productId);
-   return product
+    return product;
   } catch (error) {
     console.log("Products on page", error);
   }
+};
+
+const listenEventAddProduct =  function () {
+
+  const {contract} =  initContract()
+
+  contract.on("ProductAdded",(arg1)=>{
+     console.log(arg1)
+   
+
+  })
+
+  return {contract}
+  
 }
-
-
 export default {
   getAddress,
   addProducts,
   getProducts,
-  getProductsOwner,feedback,getRateProduct,getDetailFeedBack
+  getProductsOwner,
+  feedback,
+  getRateProduct,
+  getDetailFeedBack,listenEventAddProduct
+  
 };

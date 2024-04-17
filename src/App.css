@@ -1,0 +1,14 @@
+.modal-mode {
+  transform:  translateX(-30px);
+  transition: 30px;
+  
+}
+@keyframes transiition {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+

@@ -1,0 +1,16 @@
+.wrap-sidebar{
+    width: 200px;
+    min-height: 100vh;
+    display: flex;
+    .block-left-sb{
+         width: 50px;
+         height: 100%;
+         background:  #112041;
+    }
+
+    .block-right-sb{
+        background:  #21315a;
+        width: 150px;
+        height: 100%;
+    }
+}
