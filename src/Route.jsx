@@ -15,6 +15,7 @@ const ProtectedRoute = ({ children }) => {
 
 const Home = pages.HomePage
 const Login =pages.LoginPage
+const User = pages.UserPage
 function AppRoute() {
   return (
     <AuthProvider>
@@ -23,6 +24,11 @@ function AppRoute() {
         <Route path="/" element={
             <ProtectedRoute>
                 <Home/>
+            </ProtectedRoute>
+        } />
+         <Route path="/user" element={
+            <ProtectedRoute>
+                <User/>
             </ProtectedRoute>
         } />
       </Routes>

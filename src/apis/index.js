@@ -1,6 +1,8 @@
 import { Contract, ethers } from "ethers";
 import abi from "@/smc/abi.json";
+import { decodeError } from 'ethers-decode-error'
 import { formatDateTime } from "@/utilizings/formatTime";
+
 const initProvider = () => {
   if (!window.ethereum)
     throw new Error(
@@ -33,11 +35,12 @@ const getAddress = async () => {
 //  contract
 const initContract =  () => {
   let provider = initProvider();
-
+  // console.log("🚀 ~ initContract ~ provider:", provider)
+ let signer = provider.getSigner()
   const contract = new Contract(
     "0x5fbdb2315678afecb367f032d93f642f64180aa3",
     abi.abi,
-    provider
+    signer
   );
   return { contract, provider };
 };
@@ -66,8 +69,12 @@ const addProducts = async (name = "", imageLink = "") => {
     // Chờ cho giao dịch được xác nhận
     const receipt = await transaction.wait();
     console.log("Transaction receipt:", receipt);
-  } catch (error) {
-    console.error("Error:", error);
+    return receipt
+  } catch (err) {
+     const { error } = decodeError(err)
+    // Prints the real error message "ERC20: transfer to the zero address"
+    // console.log('Revert reason:', error)
+    throw Error(error)
   }
 };
 
@@ -87,15 +94,22 @@ const getProducts = async (page, limit) => {
 
     console.log("Products:1", result);
     return result;
-  } catch (error) {
-    console.log("Products on page", error);
+  } catch (err) {
+    const { error } = decodeError(err)
+   
+    throw Error(error)
   }
 };
 
 const getProductsOwner = async () => {
+ 
   const { contract } =  initContract();
+  console.log("🚀 ~ getProductsOwner ~ contract:", contract)
+ 
+  
   try {
     const products = await contract.getProductOwners();
+    // console.log("🚀 ~ getProductsOwner ~ products:", products)
     let result = products
       .map((product) => {
         return {
@@ -105,10 +119,10 @@ const getProductsOwner = async () => {
       })
       .filter((value) => value.id !== 0);
 
-    console.log("Products:1", result);
     return result;
-  } catch (error) {
-    console.log("Products on page", error);
+  } catch (err) {
+    const { error } = decodeError(err)
+    throw Error(error)
   }
 };
 
@@ -118,7 +132,7 @@ const feedback = async (props) => {
     const { contract, provider } =  initContract();
 
     let accounts = await provider.send("eth_requestAccounts", []);
-
+    
     const signer = provider.getSigner(accounts[0]);
 
     // Kết nối đối tượng Contract với đối tượng Signer
@@ -135,13 +149,18 @@ const feedback = async (props) => {
       props.rating,
       time
     );
-    console.log("Transaction hash:", transaction.hash);
+    // console.log("Transaction hash:", transaction.hash);
 
     // Chờ cho giao dịch được xác nhận
     const receipt = await transaction.wait();
-    console.log("Transaction receipt:", receipt);
-  } catch (error) {
-    console.error("Error:", error);
+    // console.log("Transaction receipt:", receipt);
+    return receipt
+  } catch (err) {
+    // console.error("Error:", error.message);
+    const { error } = decodeError(err)
+    // Prints the real error message "ERC20: transfer to the zero address"
+    // console.log('Revert reason:', error)
+    throw Error(error)
   }
 };
 
@@ -159,25 +178,14 @@ const getDetailFeedBack = async (productId) => {
   const { contract } =  initContract();
   try {
     const product = await contract.detailProductVote(productId);
+    console.log("🚀 ~ getDetailFeedBack ~ product:", product)
     return product;
   } catch (error) {
     console.log("Products on page", error);
   }
 };
 
-const listenEventAddProduct =  function () {
 
-  const {contract} =  initContract()
-
-  contract.on("ProductAdded",(arg1)=>{
-     console.log(arg1)
-   
-
-  })
-
-  return {contract}
-  
-}
 export default {
   getAddress,
   addProducts,
@@ -185,6 +193,6 @@ export default {
   getProductsOwner,
   feedback,
   getRateProduct,
-  getDetailFeedBack,listenEventAddProduct
+  getDetailFeedBack,initContract
   
 };

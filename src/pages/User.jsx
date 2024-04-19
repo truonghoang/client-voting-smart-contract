@@ -1,22 +1,22 @@
 import React from 'react'
 import Header from '@/components/modules/Header'
-import TableHome from '@/components/modules/TableHome'
+import TableFeedBack from '@/components/modules/TableFeedBack'
 import Sidebar from '@/components/modules/SideBar'
 
 import "@/styles/Home.scss"
-function Home() {
+function UserPage() {
   
   return (
     <div className='wrap-home'>
      <Sidebar/>
      <div className='container-content'>
      <Header/>
-     <TableHome/>
     
+    <TableFeedBack/>
 
      </div>
     </div>
   )
 }
 
-export default Home
+export default UserPage
